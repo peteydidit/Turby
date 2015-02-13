@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Turby69</string>
+    <string name="app_name">Turby</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="startSettings">Settings</string>
+    <string name="startScout">Scout the Area</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="notificationSwitch">notifications_switch</string>
+    <string name="pushNotifications">Push Notifications</string>
 
 </resources>
