@@ -1,4 +1,4 @@
-package competeydidit.facebook.www.turby69;
+package competeydidit.facebook.www.turby69.Activity;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -7,8 +7,9 @@ import android.view.MenuItem;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.content.Intent;
+
+import competeydidit.facebook.www.turby69.R;
 
 public class startingScreen extends ActionBarActivity {
 

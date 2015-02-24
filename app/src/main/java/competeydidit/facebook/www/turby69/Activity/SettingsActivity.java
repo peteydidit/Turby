@@ -1,4 +1,4 @@
-package competeydidit.facebook.www.turby69;
+package competeydidit.facebook.www.turby69.Activity;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -19,6 +19,8 @@ import android.text.TextUtils;
 
 
 import java.util.List;
+
+import competeydidit.facebook.www.turby69.R;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On

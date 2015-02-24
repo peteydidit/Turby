@@ -3,15 +3,15 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="competeydidit.facebook.www.turby69.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="competeydidit.facebook.www.turby69.Activity.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" />
 
     <header
-        android:fragment="competeydidit.facebook.www.turby69.SettingsActivity$NotificationPreferenceFragment"
+        android:fragment="competeydidit.facebook.www.turby69.Activity.SettingsActivity$NotificationPreferenceFragment"
         android:title="@string/pref_header_notifications" />
 
     <header
-        android:fragment="competeydidit.facebook.www.turby69.SettingsActivity$DataSyncPreferenceFragment"
+        android:fragment="competeydidit.facebook.www.turby69.Activity.SettingsActivity$DataSyncPreferenceFragment"
         android:title="@string/pref_header_data_sync" />
 
 </preference-headers>

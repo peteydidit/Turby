@@ -1,4 +1,4 @@
-package competeydidit.facebook.www.turby69;
+package competeydidit.facebook.www.turby69.Activity;
 
 import android.content.IntentSender;
 import android.location.Location;
@@ -16,6 +16,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import competeydidit.facebook.www.turby69.R;
 
 public class MapsActivity extends FragmentActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -52,7 +54,6 @@ public class MapsActivity extends FragmentActivity implements
         super.onResume();
         setUpMapIfNeeded();
         mGoogleApiClient.connect();
-
     }
 
     @Override
@@ -149,6 +150,8 @@ public class MapsActivity extends FragmentActivity implements
         mMap.addMarker(options);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13.0f));
     }
+
+
 
     @Override
     public void onLocationChanged(Location location) {
