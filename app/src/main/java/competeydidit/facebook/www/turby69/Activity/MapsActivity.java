@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import competeydidit.facebook.www.turby69.R;
+import competeydidit.facebook.www.turby69.Utility.GooglePlacesSearch;
 
 public class MapsActivity extends FragmentActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -30,12 +31,14 @@ public class MapsActivity extends FragmentActivity implements
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
+    private GooglePlacesSearch googlePlacesSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+        googlePlacesSearch = new GooglePlacesSearch();
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -110,7 +113,6 @@ public class MapsActivity extends FragmentActivity implements
         Log.i(TAG, "Location services connected.");
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (location == null) {
-            Log.i(TAG, "null location");
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
         else {
@@ -142,6 +144,9 @@ public class MapsActivity extends FragmentActivity implements
 
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
+
+        googlePlacesSearch.performPlacesSearch(currentLatitude, currentLongitude);
+
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
         MarkerOptions options = new MarkerOptions()
