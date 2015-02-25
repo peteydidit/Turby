@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 public class GooglePlacesSearch {
 
     public static final String TAG = GooglePlacesSearch.class.getSimpleName();
-    private static final String PLACES_SEARCH_URL =  "https://maps.googleapis.com/maps/api/place/radarsearch/json?location=51.503186,-0.126446&radius=5000&types=museum&key=AIzaSyD4kwYTjSE-FRNIIhlJa_1phvI-JkRB73o";
+    private static final String PLACES_SEARCH_URL =  "https://maps.googleapis.com/maps/api/place/textsearch/json?";
     private static final String API_KEY = "AIzaSyD4kwYTjSE-FRNIIhlJa_1phvI-JkRB73o";
     private static final HttpTransport transport = new ApacheHttpTransport();
 
@@ -30,9 +30,9 @@ public class GooglePlacesSearch {
             request.getUrl().put("key", API_KEY);
             request.getUrl().put("location", latitude + "," + longitude);
             request.getUrl().put("radius", 500);
-            request.getUrl().put("keyword", "restaurant");
+            request.getUrl().put("query", "restaurant");
 
-            places = request.executeAsync().get().parseAs(PlacesList.class);
+            places = request.executeAsync().get().parseAs(PlacesList.class);    //TODO: fix this. maybe make GooglePlacesSearch an AsyncTask
             Log.i(TAG, places.status.toString());
             for (Place place : places.results) {
                 Log.i(TAG, place.toString());
