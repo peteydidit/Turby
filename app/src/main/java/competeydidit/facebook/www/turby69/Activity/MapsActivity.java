@@ -17,8 +17,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.concurrent.ExecutionException;
+
 import competeydidit.facebook.www.turby69.R;
+import competeydidit.facebook.www.turby69.Utility.GooglePlacesSearchParams;
+import competeydidit.facebook.www.turby69.Utility.GooglePlacesSearchTask;
 import competeydidit.facebook.www.turby69.Utility.GooglePlacesSearch;
+import competeydidit.facebook.www.turby69.Utility.Place;
+import competeydidit.facebook.www.turby69.Utility.PlacesList;
 
 public class MapsActivity extends FragmentActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -144,8 +150,21 @@ public class MapsActivity extends FragmentActivity implements
 
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
+        PlacesList placesList = new PlacesList();
 
-        googlePlacesSearch.performPlacesSearch(currentLatitude, currentLongitude);
+        try {
+            GooglePlacesSearchParams paramsRestauarant = new GooglePlacesSearchParams();
+            paramsRestauarant.setLocation(location);
+            paramsRestauarant.setQuery("restaurant");
+            GooglePlacesSearchParams paramsBars = new GooglePlacesSearchParams();
+            paramsBars.setLocation(location);
+            paramsBars.setQuery("bar");
+            placesList = new GooglePlacesSearchTask().execute(paramsRestauarant, paramsBars).get();
+        }
+        catch(InterruptedException|ExecutionException e)
+        {
+            Log.d(TAG, "Error executing GooglePlacesRestaurantSearchTask");
+        }
 
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
@@ -154,6 +173,17 @@ public class MapsActivity extends FragmentActivity implements
                 .title("I am here!");
         mMap.addMarker(options);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13.0f));
+
+        for (Place place : placesList.results)
+        {
+            latLng = new LatLng(place.geometry.location.lat, place.geometry.location.lng);
+
+            options = new MarkerOptions()
+                    .position(latLng)
+                    .title(place.name);
+            mMap.addMarker(options);
+
+        }
     }
 
 

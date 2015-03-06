@@ -2,7 +2,9 @@ package competeydidit.facebook.www.turby69.Utility;
 
 import com.google.api.client.util.Key;
 
-public class Place {
+import java.io.Serializable;
+
+public class Place implements Serializable {
 
     @Key
     public String name;
@@ -17,8 +19,32 @@ public class Place {
     public String icon;
 
     @Key
-    public Float lat;
+    public String vicinity;
 
     @Key
-    public Float lng;
+    public Geometry geometry;
+
+    @Key
+    public String formatted_address;
+
+    @Override
+    public String toString()
+    {
+        return name;
+    }
+
+    public static class Geometry implements Serializable
+    {
+        @Key
+        public Location location;
+    }
+
+    public static class Location implements Serializable
+    {
+        @Key
+        public double lat;
+
+        @Key
+        public double lng;
+    }
 }

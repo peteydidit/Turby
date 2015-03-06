@@ -1,6 +1,7 @@
 package competeydidit.facebook.www.turby69.Utility;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.google.api.client.util.Key;
 
@@ -10,5 +11,11 @@ public class PlacesList {
     public String status;
 
     @Key
-    public List<Place> results;
+    public Set<Place> results;
+
+    public PlacesList()
+    {
+        status = "";
+        results = new HashSet<Place>();
+    }
 }
