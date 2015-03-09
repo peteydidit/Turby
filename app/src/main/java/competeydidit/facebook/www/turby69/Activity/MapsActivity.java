@@ -1,5 +1,6 @@
 package competeydidit.facebook.www.turby69.Activity;
 
+import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
@@ -113,6 +114,13 @@ public class MapsActivity extends FragmentActivity implements
      */
     private void setUpMap() {
         mMap.setMyLocationEnabled(true);
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent myIntent = new Intent(MapsActivity.this, PlaceDetailsActivity.class);
+                MapsActivity.this.startActivity(myIntent);
+            }
+        });
         //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
 
     }
@@ -171,14 +179,11 @@ public class MapsActivity extends FragmentActivity implements
 
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
-        MarkerOptions options = new MarkerOptions()
-                .position(latLng)
-                .title("I am here!");
-        mMap.addMarker(options);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13.0f));
 
         HashMap<Marker, Place> markerPlaceHashMap = new HashMap<Marker, Place>();
 
+        MarkerOptions options = new MarkerOptions();
         for (Place place : placesList.results)
         {
             latLng = new LatLng(place.geometry.location.lat, place.geometry.location.lng);

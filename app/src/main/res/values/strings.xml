@@ -10,5 +10,6 @@
     <string name="notificationSwitch">notifications_switch</string>
     <string name="pushNotifications">Push Notifications</string>
     <string name="title_activity_google_play_services">GooglePlayServicesActivity</string>
+    <string name="title_activity_place_details">PlaceDetailsActivity</string>
 
 </resources>

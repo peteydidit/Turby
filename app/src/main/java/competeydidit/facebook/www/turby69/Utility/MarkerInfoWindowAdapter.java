@@ -1,8 +1,10 @@
 package competeydidit.facebook.www.turby69.Utility;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,9 +38,10 @@ public class MarkerInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         Place place = markerPlaceHashMap.get(marker);
 
         //ImageView markerIcon = (ImageView) v.findViewById(R.id.marker_icon);
-        TextView markerLabel = (TextView)v.findViewById(R.id.place_name);
         //markerIcon.setImageResource(manageMarkerIcon(myMarker.getmIcon()));
-        markerLabel.setText(place.name);
+
+        TextView placeNameLabel = (TextView)v.findViewById(R.id.place_name);
+        placeNameLabel.setText(place.name);
 
         return v;
     }
