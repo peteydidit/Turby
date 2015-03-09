@@ -5,6 +5,7 @@ import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -15,14 +16,17 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import competeydidit.facebook.www.turby69.R;
 import competeydidit.facebook.www.turby69.Utility.GooglePlacesSearchParams;
 import competeydidit.facebook.www.turby69.Utility.GooglePlacesSearchTask;
 import competeydidit.facebook.www.turby69.Utility.GooglePlacesSearch;
+import competeydidit.facebook.www.turby69.Utility.MarkerInfoWindowAdapter;
 import competeydidit.facebook.www.turby69.Utility.Place;
 import competeydidit.facebook.www.turby69.Utility.PlacesList;
 
@@ -44,7 +48,6 @@ public class MapsActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
-        googlePlacesSearch = new GooglePlacesSearch();
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -153,13 +156,13 @@ public class MapsActivity extends FragmentActivity implements
         PlacesList placesList = new PlacesList();
 
         try {
-            GooglePlacesSearchParams paramsRestauarant = new GooglePlacesSearchParams();
-            paramsRestauarant.setLocation(location);
-            paramsRestauarant.setQuery("restaurant");
+            GooglePlacesSearchParams paramsRestaurant = new GooglePlacesSearchParams();
+            paramsRestaurant.setLocation(location);
+            paramsRestaurant.setQuery("restaurant");
             GooglePlacesSearchParams paramsBars = new GooglePlacesSearchParams();
             paramsBars.setLocation(location);
             paramsBars.setQuery("bar");
-            placesList = new GooglePlacesSearchTask().execute(paramsRestauarant, paramsBars).get();
+            placesList = new GooglePlacesSearchTask().execute(paramsRestaurant, paramsBars).get();
         }
         catch(InterruptedException|ExecutionException e)
         {
@@ -174,19 +177,18 @@ public class MapsActivity extends FragmentActivity implements
         mMap.addMarker(options);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13.0f));
 
+        HashMap<Marker, Place> markerPlaceHashMap = new HashMap<Marker, Place>();
+
         for (Place place : placesList.results)
         {
             latLng = new LatLng(place.geometry.location.lat, place.geometry.location.lng);
 
-            options = new MarkerOptions()
-                    .position(latLng)
-                    .title(place.name);
-            mMap.addMarker(options);
-
+            options = new MarkerOptions().position(latLng);
+            markerPlaceHashMap.put(mMap.addMarker(options), place);
         }
+
+        mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter(this, markerPlaceHashMap));
     }
-
-
 
     @Override
     public void onLocationChanged(Location location) {

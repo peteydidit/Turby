@@ -19,6 +19,9 @@ public class Place implements Serializable {
     public String icon;
 
     @Key
+    public double rating;
+
+    @Key
     public String vicinity;
 
     @Key
