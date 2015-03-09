@@ -15,47 +15,45 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 
 import java.io.IOException;
 
-public class GooglePlacesSearchTask extends AsyncTask<GooglePlacesSearchParams, Integer, PlacesList> {
+public class GooglePlacesDetailsTask extends AsyncTask<String, Integer, PlacesList> {
 
-    public static final String TAG = GooglePlacesSearchTask.class.getSimpleName();
-    private static final String PLACES_SEARCH_URL =  "https://maps.googleapis.com/maps/api/place/textsearch/json?";
+    public static final String TAG = GooglePlacesDetailsTask.class.getSimpleName();
+    private static final String PLACES_DETAILS_URL =  "https://maps.googleapis.com/maps/api/place/details/json?";
     private static final String API_KEY = "AIzaSyD4kwYTjSE-FRNIIhlJa_1phvI-JkRB73o";
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
     @Override
-    protected PlacesList doInBackground(GooglePlacesSearchParams... params) {
+    protected PlacesList doInBackground(String... params) {
         PlacesList placesList = new PlacesList();
-        for (GooglePlacesSearchParams param : params)
+        for (String param : params)
         {
             HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
             try {
-                HttpRequest request = httpRequestFactory.buildGetRequest(new GenericUrl(PLACES_SEARCH_URL));
+                HttpRequest request = httpRequestFactory.buildGetRequest(new GenericUrl(PLACES_DETAILS_URL));
                 request.getUrl().put("key", API_KEY);
-                request.getUrl().put("location", param.getLocation().getLatitude() + "," + param.getLocation().getLongitude());
-                request.getUrl().put("radius", 500);
-                request.getUrl().put("query", param.getQuery());
+                request.getUrl().put("placeid", param);
 
-                PlacesList places = request.execute().parseAs(PlacesList.class);
-                Log.i(TAG, places.status);
-
-                /* possible status codes
+                PlaceDetails placeDetails = request.execute().parseAs(PlaceDetails.class);
+                Log.i(TAG, placeDetails.status);
+                /* possible status codes:
                     OK indicates that no errors occurred; the place was successfully detected and at least one result was returned.
-                    ZERO_RESULTS indicates that the search was successful but returned no results. This may occur if the search was passed a latlng in a remote location.
+                    UNKNOWN_ERROR indicates a server-side error; trying again may be successful.
+                    ZERO_RESULTS indicates that the reference was valid but no longer refers to a valid result. This may occur if the establishment is no longer in business.
                     OVER_QUERY_LIMIT indicates that you are over your quota.
                     REQUEST_DENIED indicates that your request was denied, generally because of lack of an invalid key parameter.
-                    INVALID_REQUEST generally indicates that a required query parameter (location or radius) is missing.
+                    INVALID_REQUEST generally indicates that the query (reference) is missing.
+                    NOT_FOUND indicates that the referenced location was not found in the Places database.
                 */
-                if(places.status.equals("OK") || places.status.equals("ZERO_RESULTS"))
+                if(placeDetails.status.equals("OK") || placeDetails.status.equals("ZERO_RESULTS"))
                 {
-                    placesList.results.addAll(places.results);  // exclude some types, ex. 'lodging'
+                    placesList.results.add(placeDetails.result);
                 }
                 else
                 {
-                    Log.w(TAG, places.status);
+                    Log.w(TAG, placeDetails.status);
                 }
-                for (Place place : places.results) {
-                    Log.i(TAG, place.toString());
-                }
+                placesList.status = placeDetails.status;
+                Log.i(TAG, placeDetails.result.toString());
             }
             catch (IOException e)
             {

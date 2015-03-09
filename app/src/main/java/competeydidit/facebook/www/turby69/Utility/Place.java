@@ -7,10 +7,16 @@ import java.io.Serializable;
 public class Place implements Serializable {
 
     @Key
+    public String status;
+
+    @Key
     public String name;
 
     @Key
     public String id;
+
+    @Key
+    public String place_id;
 
     @Key
     public String reference;

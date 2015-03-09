@@ -2,17 +2,40 @@ package competeydidit.facebook.www.turby69.Activity;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import java.util.concurrent.ExecutionException;
 
 import competeydidit.facebook.www.turby69.R;
+import competeydidit.facebook.www.turby69.Utility.GooglePlacesDetailsTask;
+import competeydidit.facebook.www.turby69.Utility.Place;
+import competeydidit.facebook.www.turby69.Utility.PlacesList;
 
 public class PlaceDetailsActivity extends ActionBarActivity {
 
+    public static final String TAG = PlaceDetailsActivity.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
+        Place place = (Place) getIntent().getSerializableExtra("place");
+        try {
+            PlacesList placesList = new GooglePlacesDetailsTask().execute(place.place_id).get();
+            if (placesList.results.size() > 0)
+            {
+                place = placesList.results.iterator().next();
+            }
+        }
+        catch(InterruptedException|ExecutionException e)
+        {
+            Log.d(TAG, "Error executing GooglePlacesDetailsTask");
+        }
+
+        TextView placeNameLabel = (TextView) findViewById(R.id.place_name);
+        placeNameLabel.setText(place.name);
     }
 
 

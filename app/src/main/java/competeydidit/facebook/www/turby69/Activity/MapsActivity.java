@@ -6,7 +6,6 @@ import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -26,7 +25,6 @@ import java.util.concurrent.ExecutionException;
 import competeydidit.facebook.www.turby69.R;
 import competeydidit.facebook.www.turby69.Utility.GooglePlacesSearchParams;
 import competeydidit.facebook.www.turby69.Utility.GooglePlacesSearchTask;
-import competeydidit.facebook.www.turby69.Utility.GooglePlacesSearch;
 import competeydidit.facebook.www.turby69.Utility.MarkerInfoWindowAdapter;
 import competeydidit.facebook.www.turby69.Utility.Place;
 import competeydidit.facebook.www.turby69.Utility.PlacesList;
@@ -42,7 +40,7 @@ public class MapsActivity extends FragmentActivity implements
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private GooglePlacesSearch googlePlacesSearch;
+    private HashMap<Marker, Place> markerPlaceHashMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +58,7 @@ public class MapsActivity extends FragmentActivity implements
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+        markerPlaceHashMap = new HashMap<Marker, Place>();
     }
 
     @Override
@@ -117,11 +116,11 @@ public class MapsActivity extends FragmentActivity implements
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Intent myIntent = new Intent(MapsActivity.this, PlaceDetailsActivity.class);
-                MapsActivity.this.startActivity(myIntent);
+                Intent intent = new Intent(MapsActivity.this, PlaceDetailsActivity.class);
+                intent.putExtra("place", markerPlaceHashMap.get(marker));
+                MapsActivity.this.startActivity(intent);
             }
         });
-        //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
 
     }
 
@@ -174,16 +173,14 @@ public class MapsActivity extends FragmentActivity implements
         }
         catch(InterruptedException|ExecutionException e)
         {
-            Log.d(TAG, "Error executing GooglePlacesRestaurantSearchTask");
+            Log.e(TAG, "Error executing GooglePlacesSearchTask");
         }
 
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13.0f));
 
-        HashMap<Marker, Place> markerPlaceHashMap = new HashMap<Marker, Place>();
-
-        MarkerOptions options = new MarkerOptions();
+        MarkerOptions options;
         for (Place place : placesList.results)
         {
             latLng = new LatLng(place.geometry.location.lat, place.geometry.location.lng);
