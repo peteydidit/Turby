@@ -3,8 +3,14 @@ package competeydidit.facebook.www.turby69.Utility;
 import com.google.api.client.util.Key;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Place implements Serializable {
+
+    public Place()
+    {
+        reviews = new ArrayList<Review>();
+    }
 
     @Key
     public String status;
@@ -22,6 +28,9 @@ public class Place implements Serializable {
     public String reference;
 
     @Key
+    public int price_level;
+
+    @Key
     public String icon;
 
     @Key
@@ -35,6 +44,15 @@ public class Place implements Serializable {
 
     @Key
     public String formatted_address;
+
+    @Key
+    public String formatted_phone_number;
+
+    @Key
+    public String website;
+
+    @Key
+    public ArrayList<Review> reviews;
 
     @Override
     public String toString()
@@ -55,5 +73,20 @@ public class Place implements Serializable {
 
         @Key
         public double lng;
+    }
+
+    public static class Review implements Serializable
+    {
+        @Key
+        public String author_name;
+
+        @Key
+        public String text;
+
+        @Key
+        public int time;
+
+        @Key
+        public int rating;
     }
 }

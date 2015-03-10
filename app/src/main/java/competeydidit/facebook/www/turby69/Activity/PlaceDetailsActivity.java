@@ -1,10 +1,15 @@
 package competeydidit.facebook.www.turby69.Activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.concurrent.ExecutionException;
@@ -22,11 +27,15 @@ public class PlaceDetailsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
         Place place = (Place) getIntent().getSerializableExtra("place");
+
+
+
         try {
             PlacesList placesList = new GooglePlacesDetailsTask().execute(place.place_id).get();
             if (placesList.results.size() > 0)
             {
                 place = placesList.results.iterator().next();
+
             }
         }
         catch(InterruptedException|ExecutionException e)
@@ -36,8 +45,47 @@ public class PlaceDetailsActivity extends ActionBarActivity {
 
         TextView placeNameLabel = (TextView) findViewById(R.id.place_name);
         placeNameLabel.setText(place.name);
-    }
 
+        ImageButton call = (ImageButton)findViewById(R.id.call); //call button
+        call.setTag(place);
+        call.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                Place place = (Place) v.getTag();
+                String num = place.formatted_phone_number.replaceAll("\\s+|[(]|[)]","");
+                callIntent.setData(Uri.parse("tel:" + num));
+                startActivity(callIntent);
+            }
+        }
+        );
+
+        ImageButton directions = (ImageButton)findViewById(R.id.directions); //call button
+        directions.setTag(place);
+        directions.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v) {
+                Place place = (Place) v.getTag();
+                String addr = place.formatted_address;
+                Intent dirIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + addr + "&directionsmode=driving"));
+                dirIntent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                startActivity(dirIntent);
+            }
+        }
+        );
+
+        ImageButton web = (ImageButton)findViewById(R.id.website); //call button
+        web.setTag(place);
+        web.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v) {
+                Place place = (Place) v.getTag();
+                String url = place.website;
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        }
+        );
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
