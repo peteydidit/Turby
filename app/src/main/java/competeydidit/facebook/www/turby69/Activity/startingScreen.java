@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.content.Intent;
 
+import com.parse.Parse;
+
 import competeydidit.facebook.www.turby69.R;
 
 public class startingScreen extends ActionBarActivity {
@@ -19,6 +21,10 @@ public class startingScreen extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting_screen);
         Log.i(TAG, "onCreate");
+        Parse.enableLocalDatastore(this);
+
+        Parse.initialize(this, "onOXdGXqwSvJoTJnDSOYoGPtUAbpZFeBjnDk2X4B", "DGdjhHG74CXJA1IOyuR3s713YyaJ7r4MEdjTLkgR");
+
         Button start_scout = (Button)findViewById(R.id.start_scout); //starting screen scout button
         start_scout.setOnClickListener(
                 new Button.OnClickListener(){

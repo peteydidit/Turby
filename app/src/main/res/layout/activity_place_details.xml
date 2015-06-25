@@ -55,6 +55,26 @@
         android:id="@+id/ratingBar"
         android:layout_toLeftOf="@+id/favorite"
         android:layout_toStartOf="@+id/favorite"
-        android:layout_above="@+id/website" />
+        android:layout_above="@+id/website"
+        android:rating="4.2" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit Deal"
+        android:id="@+id/submitDeal"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="setContentView" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_below="@+id/directions"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentLeft="false"
+        android:layout_above="@+id/submitDeal" />
 
 </RelativeLayout>

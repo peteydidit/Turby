@@ -8,13 +8,23 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.parse.ParseObject;
+
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import competeydidit.facebook.www.turby69.R;
+import competeydidit.facebook.www.turby69.Utility.DatabaseHandler;
+import competeydidit.facebook.www.turby69.Utility.Day;
+import competeydidit.facebook.www.turby69.Utility.Deal;
 import competeydidit.facebook.www.turby69.Utility.GooglePlacesDetailsTask;
 import competeydidit.facebook.www.turby69.Utility.Place;
 import competeydidit.facebook.www.turby69.Utility.PlacesList;
@@ -27,8 +37,11 @@ public class PlaceDetailsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
         Place place = (Place) getIntent().getSerializableExtra("place");
-
-
+        DatabaseHandler dbh = new DatabaseHandler();
+        List<Deal> dealList = dbh.getDealsFromGooglePlaceId(place.place_id);
+        ListAdapter adapter = new ArrayAdapter<Deal>(this, android.R.layout.simple_list_item_1, dealList);
+        ListView listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(adapter);
 
         try {
             PlacesList placesList = new GooglePlacesDetailsTask().execute(place.place_id).get();
@@ -83,6 +96,23 @@ public class PlaceDetailsActivity extends ActionBarActivity {
                 startActivity(i);
             }
         }
+        );
+
+        Button submitDeal = (Button)findViewById(R.id.submitDeal); //call button
+        submitDeal.setTag(place);
+        submitDeal.setOnClickListener(new Button.OnClickListener() {
+                                   public void onClick(View v) {
+                                       /*ParseObject testObject = new ParseObject("TestObject");
+                                       testObject.put("foo", "bar");
+                                       testObject.saveInBackground();*/
+                                       Place place = (Place) v.getTag();
+                                       DatabaseHandler dbh = new DatabaseHandler();
+                                       Day[] strArray = {Day.MON, Day.TUES, Day.WED};
+                                       dbh.saveDeal(new Deal("55", new Date(), 3, 1, place.place_id, new Date(),
+                                               new Date(), 420, 500, strArray, true,
+                                               false, "UF Student/UFID", "Test"));
+                                   }
+                               }
         );
 
     }
